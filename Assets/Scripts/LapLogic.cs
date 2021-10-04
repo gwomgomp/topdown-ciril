@@ -1,19 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class LapLogic : MonoBehaviour
 {
   public short lapNumber = 3;
   
-  private short numberOfCheckpoints = 0;
+  private short finalCheckpointNumber = 0;
   private short nextCheckpointNumber = 1;
   private short lapsCompleted = 0;
   
   // Start is called before the first frame update
   void Start()
   {
-    numberOfCheckpoints = (short) GameObject.FindGameObjectsWithTag("Checkpoint").Length;
+    GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
+    
+    foreach (GameObject checkpoint in checkpoints)
+    {
+      CheckpointLogic checkpointLogic = checkpoint.GetComponent<CheckpointLogic>();
+      finalCheckpointNumber = Math.Max(checkpointLogic.checkpointNumber, finalCheckpointNumber);
+    }
   }
 
   // Update is called once per frame
@@ -39,7 +46,7 @@ public class LapLogic : MonoBehaviour
       Debug.Log("Checkpoint hit");
       nextCheckpointNumber++;
       
-      if (nextCheckpointNumber > numberOfCheckpoints)
+      if (nextCheckpointNumber > finalCheckpointNumber)
       {
         Debug.Log("Lap completed");
         nextCheckpointNumber = 1;
