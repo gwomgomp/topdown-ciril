@@ -30,7 +30,7 @@ public class CameraFollow : MonoBehaviour
     staticCameraZ = m_MainCamera.transform.position.z;
   }
   
-  public void centerCamera()
+  public void CenterCamera()
   {
     m_MainCamera.transform.position = new Vector3(body.transform.position.x, body.transform.position.y, staticCameraZ);
   }

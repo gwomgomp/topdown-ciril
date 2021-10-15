@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class LapLogic : MonoBehaviour
+public class LapController : MonoBehaviour
 {
   public short lapNumber = 3;
   
@@ -11,22 +11,22 @@ public class LapLogic : MonoBehaviour
   private short nextCheckpointNumber = 1;
   private short lapsCompleted = 0;
   
+  public delegate void HitCheckpoint(short checkpointNumber);
+  public static event HitCheckpoint OnCheckpoint;
+  
   // Start is called before the first frame update
   void Start()
   {
+    OnCheckpoint += UpdateCheckpoint;
+    
     GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
     
-    foreach (GameObject checkpoint in checkpoints)
+    foreach (GameObject checkpointObject in checkpoints)
     {
-      CheckpointLogic checkpointLogic = checkpoint.GetComponent<CheckpointLogic>();
-      finalCheckpointNumber = Math.Max(checkpointLogic.checkpointNumber, finalCheckpointNumber);
+      Checkpoint checkpoint = checkpointObject.GetComponent<Checkpoint>();
+      finalCheckpointNumber = Math.Max(checkpoint.checkpointNumber, finalCheckpointNumber);
+      checkpoint.SetHandler(OnCheckpoint);
     }
-  }
-
-  // Update is called once per frame
-  void Update()
-  {
-    
   }
   
   void OnGUI()
@@ -36,7 +36,7 @@ public class LapLogic : MonoBehaviour
     //GUI.Label(new Rect(10,90,100,100), "angle: " + Math.Tan(body.velocity.x, body.velocity.y));
   }
   
-  public void hitCheckpoint(short checkpointNumber)
+  public void UpdateCheckpoint(short checkpointNumber)
   {
     Debug.Log("Trigger recieved: " + checkpointNumber);
     Debug.Log("Current nextCheckpoint: " + nextCheckpointNumber);
