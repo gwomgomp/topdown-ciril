@@ -10,8 +10,6 @@ public class Checkpoint : MonoBehaviour
   
   private void OnTriggerEnter2D(Collider2D other)
   {
-    Debug.Log("Trigger hit: " + checkpointNumber);
-    
     if (OnCheckpoint != null && other.CompareTag("Player")) {
       OnCheckpoint(checkpointNumber);
     }

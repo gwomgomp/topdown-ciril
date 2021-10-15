@@ -14,7 +14,6 @@ public class LapController : MonoBehaviour
   public delegate void HitCheckpoint(short checkpointNumber);
   public static event HitCheckpoint OnCheckpoint;
   
-  // Start is called before the first frame update
   void Start()
   {
     OnCheckpoint += UpdateCheckpoint;
@@ -29,26 +28,14 @@ public class LapController : MonoBehaviour
     }
   }
   
-  void OnGUI()
+  private void UpdateCheckpoint(short checkpointNumber)
   {
-    GUI.Label(new Rect(10,30,100,100), "nextCheckpoint: " + nextCheckpointNumber);
-    GUI.Label(new Rect(10,60,100,100), "laps: " + lapsCompleted);
-    //GUI.Label(new Rect(10,90,100,100), "angle: " + Math.Tan(body.velocity.x, body.velocity.y));
-  }
-  
-  public void UpdateCheckpoint(short checkpointNumber)
-  {
-    Debug.Log("Trigger recieved: " + checkpointNumber);
-    Debug.Log("Current nextCheckpoint: " + nextCheckpointNumber);
-    
     if (checkpointNumber == nextCheckpointNumber)
     {
-      Debug.Log("Checkpoint hit");
       nextCheckpointNumber++;
       
       if (nextCheckpointNumber > finalCheckpointNumber)
       {
-        Debug.Log("Lap completed");
         nextCheckpointNumber = 1;
         lapsCompleted++;
       }

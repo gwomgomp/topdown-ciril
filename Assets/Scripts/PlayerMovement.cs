@@ -13,13 +13,11 @@ public class PlayerMovement : MonoBehaviour
   public float driveSpeed = 10.0f;
   public float turnSpeed = 1.0f;
   
-  // Start is called before the first frame update
   void Start()
   {
       body = GetComponent<Rigidbody2D>();
   }
 
-  // Update is called once per frame
   void Update()
   {
       horizontal = Input.GetAxisRaw("Horizontal");
