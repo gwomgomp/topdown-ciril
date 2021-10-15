@@ -9,10 +9,12 @@ public class LapController : MonoBehaviour
   
   private short finalCheckpointNumber = 0;
   private short nextCheckpointNumber = 1;
-  private short lapsCompleted = 0;
   
   public delegate void HitCheckpoint(short checkpointNumber);
   public static event HitCheckpoint OnCheckpoint;
+  
+  public delegate void FinishLap();
+  public static event FinishLap OnLap;
   
   void Start()
   {
@@ -37,7 +39,7 @@ public class LapController : MonoBehaviour
       if (nextCheckpointNumber > finalCheckpointNumber)
       {
         nextCheckpointNumber = 1;
-        lapsCompleted++;
+        OnLap();
       }
     }
   }
