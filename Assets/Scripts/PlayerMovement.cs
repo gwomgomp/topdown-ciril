@@ -7,29 +7,59 @@ public class PlayerMovement : MonoBehaviour
 {
   Rigidbody2D body;
 
-  float horizontal;
-  float vertical;
+  private float horizontal;
+  private float vertical;
+  
+  private float boostTimer = 0.0f;
+  private float effectiveDriveSpeed = 0.0f;
 
-  public float driveSpeed = 10.0f;
-  public float turnSpeed = 1.0f;
+  public float driveSpeed = 20.0f;
+  public float turnSpeed = 2.5f;
   
   void Start()
   {
-      body = GetComponent<Rigidbody2D>();
+    body = GetComponent<Rigidbody2D>();
+    effectiveDriveSpeed = driveSpeed;
+    
+    PowerUpController.OnBoost += BoostHandler;
   }
 
   void Update()
   {
-      horizontal = Input.GetAxisRaw("Horizontal");
-      vertical = Input.GetAxisRaw("Vertical");
+    horizontal = Input.GetAxisRaw("Horizontal");
+    vertical = Input.GetAxisRaw("Vertical");
+    
+    if (boostTimer > 0.0f)
+    {
+      boostTimer -= Time.deltaTime;
+      
+      if (boostTimer <= 0.0f)
+      {
+        effectiveDriveSpeed = driveSpeed;
+      }
+    }
   }
 
   private void FixedUpdate()
   {
-      body.AddRelativeForce(new Vector2(0, driveSpeed * vertical));
-      
-      body.rotation += -horizontal * turnSpeed;
-      body.rotation %= 360;
-      if(body.rotation < 0.0f) {body.rotation += 360.0f;}
+    body.AddRelativeForce(new Vector2(0, effectiveDriveSpeed * vertical));
+    
+    body.rotation += -horizontal * turnSpeed;
+    body.rotation %= 360;
+    if(body.rotation < 0.0f) {body.rotation += 360.0f;}
+  }
+  
+  private void BoostHandler(Collider2D other, float boostPower, float boostDuration)
+  {
+    if(other.gameObject == gameObject)
+    {
+      ApplyBoost(boostPower, boostDuration);
+    }
+  }
+  
+  private void ApplyBoost(float boostPower, float boostDuration)
+  {
+    boostTimer = boostDuration;
+    effectiveDriveSpeed *= boostPower;
   }
 }
