@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.IO;
 
+[ExecuteInEditMode]
 public class MapExporter : MonoBehaviour
 {
   public GameObject barrierTilemapObject;
   public bool exportMap = false;
+  public string mapName = "default";
   
   void Update()
   {
@@ -17,7 +19,15 @@ public class MapExporter : MonoBehaviour
       
       Tilemap barrierTilemap = barrierTilemapObject.GetComponent<Tilemap>();
       
-      string filePath = "G:\\racer_levels\\export_" + System.DateTime.Now.ToString("yyMMddHHmmss") + ".txt";
+      string levelFolderPath = Application.persistentDataPath + "\\levels\\";
+      
+      if(!Directory.Exists(levelFolderPath))
+      {    
+        Directory.CreateDirectory(levelFolderPath);
+      }
+      
+      string filePath = levelFolderPath + mapName + ".txt";
+      
       StreamWriter writer = new StreamWriter(filePath, true);
       
       writer.WriteLine("+gigadriftlevel");

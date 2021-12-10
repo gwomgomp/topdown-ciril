@@ -8,21 +8,25 @@ public class PlayerMovement : MonoBehaviour
 {
   Rigidbody2D body;
 
+  public float driveSpeed = 20.0f;
+  public float turnSpeed = 2.5f;
+  
+  private bool controlEnabled = false;
+
   private float horizontal;
   private float vertical;
   
   private float boostTimer = 0.0f;
   private float effectiveDriveSpeed = 0.0f;
-
-  public float driveSpeed = 20.0f;
-  public float turnSpeed = 2.5f;
   
   void Start()
   {
     body = GetComponent<Rigidbody2D>();
     effectiveDriveSpeed = driveSpeed;
     
-    PowerUpController.OnBoost += BoostHandler;
+    RaceEventController.OnBoost += BoostHandler;
+    RaceEventController.OnRaceStart += EnableControl;
+    RaceEventController.OnRaceEnd += DisableControl;
   }
 
   void Update()
@@ -32,16 +36,19 @@ public class PlayerMovement : MonoBehaviour
       SceneManager.LoadScene(0);
     }
     
-    horizontal = Input.GetAxisRaw("Horizontal");
-    vertical = Input.GetAxisRaw("Vertical");
-    
-    if (boostTimer > 0.0f)
+    if (controlEnabled)
     {
-      boostTimer -= Time.deltaTime;
+      horizontal = Input.GetAxisRaw("Horizontal");
+      vertical = Input.GetAxisRaw("Vertical");
       
-      if (boostTimer <= 0.0f)
+      if (boostTimer > 0.0f)
       {
-        effectiveDriveSpeed = driveSpeed;
+        boostTimer -= Time.deltaTime;
+        
+        if (boostTimer <= 0.0f)
+        {
+          effectiveDriveSpeed = driveSpeed;
+        }
       }
     }
   }
@@ -53,6 +60,18 @@ public class PlayerMovement : MonoBehaviour
     body.rotation += -horizontal * turnSpeed;
     body.rotation %= 360;
     if(body.rotation < 0.0f) {body.rotation += 360.0f;}
+  }
+  
+  private void EnableControl()
+  {
+    controlEnabled = true;
+  }
+  
+  private void DisableControl()
+  {
+    horizontal = 0.0f;
+    vertical = 0.0f;
+    controlEnabled = false;
   }
   
   private void BoostHandler(Collider2D other, float boostPower, float boostDuration)

@@ -7,11 +7,11 @@ using System.IO;
 public class LevelListController : MonoBehaviour
 {
   public GameObject dropdownObject;
-  public string levelDirectory = "G:\\racer_levels\\";
   private Dropdown levelSelectDropdown;
   
   void Start()
   {
+    string levelDirectory = Application.persistentDataPath + "\\levels\\";
     levelSelectDropdown = dropdownObject.GetComponent<Dropdown>();
     List<string> levelNames = new List<string>();
     

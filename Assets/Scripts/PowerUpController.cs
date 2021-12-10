@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class PowerUpController : MonoBehaviour
 {
-  public delegate void HitPowerUp(Collider2D other, float boostPower, float boostDuration);
-  public static event HitPowerUp OnBoost;
+  public float boostPower = 1.5f;
+  public float boostDuration = 0.5f;
   
   void Start()
   {
-    GameObject[] boosts = GameObject.FindGameObjectsWithTag("Boost");
-    
-    foreach (GameObject boostObject in boosts)
+    RaceEventController.OnPowerUp += HandlePowerUp;
+  }
+  
+  private void HandlePowerUp(Collider2D other, PowerUp.PowerUpType powerUpType)
+  {
+    switch(powerUpType)
     {
-      Boost boost = boostObject.GetComponent<Boost>();
-      boost.SetHandler(OnBoost);
+      case PowerUp.PowerUpType.Boost:
+      {
+        RaceEventController.TriggerOnBoost(other, boostPower, boostDuration);
+        
+        break;
+      }
+      default: break;
     }
   }
 }

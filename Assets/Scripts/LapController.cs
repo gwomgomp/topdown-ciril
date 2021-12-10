@@ -1,28 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using System;
 
 public class LapController : MonoBehaviour
 {
-  public short lapNumber = 3;
+  public static short totalLaps = 1;
   public GameObject statisticsControllerObject;
   
   private short finalCheckpointNumber = 0;
   private short nextCheckpointNumber = 1;
-  
-  public delegate void HitCheckpoint(short checkpointNumber);
-  public static event HitCheckpoint OnCheckpoint;
-  
-  public delegate void FinishLap();
-  public static event FinishLap OnLap;
+  private short lapsCompleted = 0;
   
   void Start()
   {
-    RemoveEventListeners();
-    
-    OnCheckpoint += UpdateCheckpoint;
+    RaceEventController.OnCheckpoint += UpdateCheckpoint;
     
     GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
     
@@ -30,7 +22,6 @@ public class LapController : MonoBehaviour
     {
       Checkpoint checkpoint = checkpointObject.GetComponent<Checkpoint>();
       finalCheckpointNumber = Math.Max(checkpoint.checkpointNumber, finalCheckpointNumber);
-      checkpoint.SetHandler(OnCheckpoint);
     }
   }
   
@@ -43,26 +34,13 @@ public class LapController : MonoBehaviour
       if (nextCheckpointNumber > finalCheckpointNumber)
       {
         nextCheckpointNumber = 1;
-        OnLap();
-      }
-    }
-  }
-  
-  private static void RemoveEventListeners()
-  {
-    if (OnLap != null)
-    {
-      foreach (Delegate d in OnLap.GetInvocationList())
-      {
-        OnLap -= (FinishLap)d;
-      }
-    }
-    
-    if (OnCheckpoint != null)
-    {
-      foreach (Delegate d in OnCheckpoint.GetInvocationList())
-      {
-        OnCheckpoint -= (HitCheckpoint)d;
+        lapsCompleted += 1;
+        RaceEventController.TriggerOnLap();
+        
+        if (lapsCompleted >= totalLaps)
+        {
+          RaceEventController.TriggerOnRaceEnd();
+        }
       }
     }
   }

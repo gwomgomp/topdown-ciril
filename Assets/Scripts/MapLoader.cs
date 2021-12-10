@@ -32,8 +32,8 @@ public class MapLoader : MonoBehaviour
     {
       Destroy(checkpointObject);
     }
-  
-    string filePath = "G:\\racer_levels\\" + mapName + ".txt";
+    
+    string filePath = Application.persistentDataPath + "\\levels\\" + mapName + ".txt";
     StreamReader reader = new StreamReader(filePath, true);
     string line;
     string[] values;

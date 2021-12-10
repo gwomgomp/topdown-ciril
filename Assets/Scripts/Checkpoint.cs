@@ -6,17 +6,10 @@ public class Checkpoint : MonoBehaviour
 {
   public short checkpointNumber = 1;
   
-  private LapController.HitCheckpoint OnCheckpoint;
-  
   private void OnTriggerEnter2D(Collider2D other)
   {
-    if (OnCheckpoint != null && other.CompareTag("Player")) {
-      OnCheckpoint(checkpointNumber);
+    if (other.CompareTag("Player")) {
+      RaceEventController.TriggerOnCheckpoint(checkpointNumber);
     }
-  }
-  
-  public void SetHandler(LapController.HitCheckpoint OnCheckpoint)
-  {
-    this.OnCheckpoint = OnCheckpoint;
   }
 }
