@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System;
 
 public class LapController : MonoBehaviour
 {
   public short lapNumber = 3;
+  public GameObject statisticsControllerObject;
   
   private short finalCheckpointNumber = 0;
   private short nextCheckpointNumber = 1;
@@ -18,6 +20,8 @@ public class LapController : MonoBehaviour
   
   void Start()
   {
+    RemoveEventListeners();
+    
     OnCheckpoint += UpdateCheckpoint;
     
     GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
@@ -40,6 +44,25 @@ public class LapController : MonoBehaviour
       {
         nextCheckpointNumber = 1;
         OnLap();
+      }
+    }
+  }
+  
+  private static void RemoveEventListeners()
+  {
+    if (OnLap != null)
+    {
+      foreach (Delegate d in OnLap.GetInvocationList())
+      {
+        OnLap -= (FinishLap)d;
+      }
+    }
+    
+    if (OnCheckpoint != null)
+    {
+      foreach (Delegate d in OnCheckpoint.GetInvocationList())
+      {
+        OnCheckpoint -= (HitCheckpoint)d;
       }
     }
   }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 
 public class PlayerMovement : MonoBehaviour
@@ -26,6 +27,11 @@ public class PlayerMovement : MonoBehaviour
 
   void Update()
   {
+    if (Input.GetKeyDown("escape"))
+    {
+      SceneManager.LoadScene(0);
+    }
+    
     horizontal = Input.GetAxisRaw("Horizontal");
     vertical = Input.GetAxisRaw("Vertical");
     

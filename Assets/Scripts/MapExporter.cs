@@ -6,38 +6,45 @@ using System.IO;
 
 public class MapExporter : MonoBehaviour
 {
-  public GameObject tilemapObject;
+  public GameObject barrierTilemapObject;
+  public bool exportMap = false;
   
-  void Start()
+  void Update()
   {
-    Tilemap tilemap = tilemapObject.GetComponent<Tilemap>();
-    
-    string filePath = "G:\\racer_levels\\export_" + System.DateTime.Now.ToString("yyMMddHHmmss") + ".txt";
-    StreamWriter writer = new StreamWriter(filePath, true);
-    
-    writer.WriteLine("Tiles:");
-    
-    foreach (Vector3Int position in tilemap.cellBounds.allPositionsWithin)
+    if(exportMap)
     {
-      if(tilemap.HasTile(position))
-      {
-        writer.WriteLine(tilemap.GetSprite(position).name + "," + position.x + "," + position.y);
-      }
-    }
-    
-    writer.WriteLine("");
-    writer.WriteLine("Checkpoints:");
-    
-    GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
-    
-    foreach (GameObject checkpointObject in checkpoints)
-    {
-      Transform transform = checkpointObject.transform;
+      exportMap = false;
       
-      Checkpoint checkpoint = checkpointObject.GetComponent<Checkpoint>();
-      writer.WriteLine(checkpoint.checkpointNumber + "," + transform.position.x + "," + transform.position.y + "," + transform.localScale.x + "," + transform.localScale.y);
+      Tilemap barrierTilemap = barrierTilemapObject.GetComponent<Tilemap>();
+      
+      string filePath = "G:\\racer_levels\\export_" + System.DateTime.Now.ToString("yyMMddHHmmss") + ".txt";
+      StreamWriter writer = new StreamWriter(filePath, true);
+      
+      writer.WriteLine("+gigadriftlevel");
+      
+      writer.WriteLine("+barriers");
+      
+      foreach (Vector3Int position in barrierTilemap.cellBounds.allPositionsWithin)
+      {
+        if(barrierTilemap.HasTile(position))
+        {
+          writer.WriteLine(barrierTilemap.GetSprite(position).name + "," + position.x + "," + position.y);
+        }
+      }
+      
+      writer.WriteLine("+checkpoints");
+      
+      GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
+      
+      foreach (GameObject checkpointObject in checkpoints)
+      {
+        Transform transform = checkpointObject.transform;
+        
+        Checkpoint checkpoint = checkpointObject.GetComponent<Checkpoint>();
+        writer.WriteLine(checkpoint.checkpointNumber + "," + transform.position.x + "," + transform.position.y + "," + transform.localScale.x + "," + transform.localScale.y);
+      }
+      
+      writer.Close();
     }
-    
-    writer.Close();
   }
 }
