@@ -17,6 +17,11 @@ public class GhostRecorder : MonoBehaviour
       this.y = y;
       this.rotation = rotation;
     }
+    
+    public Vector3 ToVector3()
+    {
+      return new Vector3(x, y, 0);
+    }
   }
   
   public static float recordFrequency = 0.25f;

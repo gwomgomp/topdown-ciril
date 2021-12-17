@@ -81,30 +81,16 @@ public class GhostReplayer : MonoBehaviour
   
   private GhostRecorder.GhostPosition TweenGhostPosition(GhostRecorder.GhostPosition lastGhostPosition, GhostRecorder.GhostPosition targetGhostPosition, float step)
   {
-    float lastRotation = lastGhostPosition.rotation;
-    float targetRotation = targetGhostPosition.rotation;
-    if (Math.Abs(lastRotation - targetRotation) > 180)
-    {
-      if (lastRotation > targetRotation)
-      {
-        targetRotation += 360;
-      }
-      else
-      {
-        lastRotation += 360;
-      }
-    }
+    Vector3 tweenedPosition = Vector3.Lerp(lastGhostPosition.ToVector3(), targetGhostPosition.ToVector3(), step);
     
-    float tweenedX = ((targetGhostPosition.x - lastGhostPosition.x) * step) + lastGhostPosition.x;
-    float tweenedY = ((targetGhostPosition.y - lastGhostPosition.y) * step) + lastGhostPosition.y;
-    float tweenedRotation = ((targetRotation - lastRotation) * step) + lastRotation;
+    float tweenedRotation = Mathf.LerpAngle(lastGhostPosition.rotation, targetGhostPosition.rotation, step);
     
-    return new GhostRecorder.GhostPosition(tweenedX, tweenedY, tweenedRotation);
+    return new GhostRecorder.GhostPosition(tweenedPosition.x, tweenedPosition.y, tweenedRotation);
   }
   
   private void SetPosition(GhostRecorder.GhostPosition ghostPosition)
   {
-    gameObject.transform.localPosition = new Vector3(ghostPosition.x, ghostPosition.y, 0);
+    gameObject.transform.localPosition = ghostPosition.ToVector3();
     gameObject.transform.localEulerAngles = Vector3.forward * ghostPosition.rotation;
   }
   
