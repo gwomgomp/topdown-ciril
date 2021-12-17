@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class RaceStartController : MonoBehaviour
 {
   public Text countdownText;
-  private float timer = 0;
+  private float timer = 0.0f;
   
   void Start()
   {

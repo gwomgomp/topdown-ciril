@@ -1097,7 +1097,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dropdownObject: {fileID: 2095889003}
-  levelDirectory: G:\racer_levels\
 --- !u!1 &1287512553
 GameObject:
   m_ObjectHideFlags: 0
